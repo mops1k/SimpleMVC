@@ -12,21 +12,15 @@ type Routing struct {
     router *mux.Router
 }
 
-var Router *Routing
 
-func GetRouting() *Routing {
-    Lock.Lock()
-    defer Lock.Unlock()
+func initRouter() *Routing {
+    router := &Routing{router: mux.NewRouter()}
+    router.router.PathPrefix("/static/").
+        Handler(http.StripPrefix(
+            "/static/",
+            http.FileServer(http.Dir("/static/")))).Name("static")
 
-    if Router == nil {
-        Router = &Routing{router: mux.NewRouter()}
-        Router.router.PathPrefix("/static/").
-            Handler(http.StripPrefix(
-                "/static/",
-                http.FileServer(http.Dir("/static/")))).Name("static")
-    }
-
-    return Router
+    return router
 }
 
 func (r *Routing) AddController(c Controller, methods ...string) {
@@ -46,7 +40,7 @@ func (r *Routing) AddController(c Controller, methods ...string) {
 
         _, err := fmt.Fprint(writer, content)
         if err != nil {
-            Logger.App.Fatal(err)
+            Container.GetLogger().App.Fatal(err)
         }
 
         r.logRequest(start, request)
@@ -68,7 +62,7 @@ func (r *Routing) setDefaultMethods(methods []string) []string {
 func (r *Routing) logRequest(start time.Time, req *http.Request) {
     requesterIP := req.RemoteAddr
 
-    Logger.App.Println(
+    Container.GetLogger().App.Println(
         req.RequestURI,
         req.Method,
         requesterIP,

@@ -5,3 +5,7 @@ server:
         read:  10
         write: 15
         idle:  30
+
+database:
+    type: sqlite
+    url:  database.db

@@ -1,51 +1,53 @@
 package service
 
 import (
-    "github.com/spf13/viper"
     "io/ioutil"
     "os"
     "time"
+
+    "github.com/spf13/viper"
 )
 
 type Config struct {
     reader *viper.Viper
-    files  []string
 }
 
-var Configuration *Config
+var configuration *Config
 
-func InitConfig() *Config {
-    if Configuration == nil {
+func initConfig() *Config {
         var files []os.FileInfo
-        Configuration = &Config{reader: viper.New()}
-        Configuration.reader.AutomaticEnv()
-        Configuration.reader.SetConfigType("yaml")
+        configuration = &Config{reader: viper.New()}
+        configuration.reader.AutomaticEnv()
+        configuration.reader.SetConfigType("yaml")
 
         dirName := "./config/"
 
         files, err := ioutil.ReadDir(dirName)
         if err != nil {
-            Logger.App.Panic(err)
+            Container.GetLogger().App.Panic(err)
         }
 
         for _, file := range files {
             if file.IsDir() {
                 continue
             }
-            Configuration.reader.SetConfigFile(dirName + file.Name())
-            err = Configuration.reader.MergeInConfig()
+            configuration.reader.SetConfigFile(dirName + file.Name())
+            err = configuration.reader.MergeInConfig()
             if err != nil {
-                Logger.App.Fatal(err)
+                Container.GetLogger().App.Fatal(err)
             }
         }
-    }
 
-    return Configuration
+    return configuration
 }
 
 // Get config parameter value
 func (c *Config) Get(key string) interface{} {
     return c.reader.Get(key)
+}
+
+func (c *Config) GetString(key string) string {
+    return c.reader.GetString(key)
 }
 
 func (c *Config) GetInt(key string) int {
@@ -63,13 +65,13 @@ func (c *Config) GetDuration(key string) time.Duration {
 // Add file to config
 func (c *Config) AddFile(path string) {
     c.reader.SetConfigFile(path)
-    err := Configuration.reader.MergeInConfig()
+    err := c.reader.MergeInConfig()
     if err != nil {
-        Logger.App.Fatal(err)
+        Container.GetLogger().App.Fatal(err)
     }
 
     err = c.reader.MergeInConfig()
     if err != nil {
-        Logger.App.Fatal(err)
+        Container.GetLogger().App.Fatal(err)
     }
 }

@@ -22,14 +22,14 @@ func (bc *BaseController) Render(vars map[interface{}]interface{}, filenames ...
     }
     goTemplate, err := template.ParseFiles(paths...)
     if err != nil {
-        Logger.App.Panic(err)
+        Container.GetLogger().App.Panic(err)
     }
 
     writer := &bytes.Buffer{}
 
     err = goTemplate.Execute(writer, vars)
     if err != nil {
-        Logger.App.Panic(err)
+        Container.GetLogger().App.Panic(err)
     }
 
     return string(writer.Bytes())
