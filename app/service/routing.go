@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"sync"
+	"time"
 )
 
 type Routing struct {
@@ -32,6 +33,7 @@ func (r *Routing) AddController(c Controller, methods ...string) {
 	methods = r.setDefaultMethods(methods)
 	pathName, path := c.Name()
 	r.router.HandleFunc(path, func(writer http.ResponseWriter, request *http.Request) {
+		start := time.Now()
 		var context = &Context{response: writer, request: request, statusCode: http.StatusOK}
 		content := c.Action(context)
 
@@ -46,6 +48,8 @@ func (r *Routing) AddController(c Controller, methods ...string) {
 		if err != nil {
 			Logger.App.Fatal(err)
 		}
+
+		r.logRequest(start, request)
 	}).Methods(methods...).Name(pathName)
 }
 
@@ -59,4 +63,16 @@ func (r *Routing) setDefaultMethods(methods []string) []string {
 	}
 
 	return methods
+}
+
+func (r *Routing) logRequest(start time.Time, req *http.Request) {
+	requesterIP := req.RemoteAddr
+
+	Logger.App.Println(
+		req.RequestURI,
+		req.Method,
+		requesterIP,
+		time.Since(start),
+		req.UserAgent(),
+	)
 }

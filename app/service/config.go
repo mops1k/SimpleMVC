@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"os"
+	"time"
 )
 
 type Config struct {
@@ -45,6 +46,18 @@ func InitConfig() *Config {
 // Get config parameter value
 func (c *Config) Get(key string) interface{} {
 	return c.reader.Get(key)
+}
+
+func (c *Config) GetInt(key string) int {
+	return c.reader.GetInt(key)
+}
+
+func (c *Config) GetBool(key string) bool {
+	return c.reader.GetBool(key)
+}
+
+func (c *Config) GetDuration(key string) time.Duration {
+	return c.reader.GetDuration(key)
 }
 
 // Add file to config
