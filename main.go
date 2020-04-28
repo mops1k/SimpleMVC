@@ -47,8 +47,7 @@ func main() {
             service.Logger.App.Fatal(err)
         }
     }()
-    defer server.Close()
-
+    defer func() {_ = server.Close()}()
 
     var command string
     service.Logger.App.Println(`Type "exit" for closing application`)
