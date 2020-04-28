@@ -3,6 +3,7 @@ package service
 import (
 	"log"
 	"os"
+	"sync"
 )
 
 type Log struct {
@@ -10,8 +11,12 @@ type Log struct {
 }
 
 var Logger *Log
+var lock = &sync.Mutex{}
 
 func InitLogger() *Log {
+	lock.Lock()
+	defer lock.Unlock()
+
 	if Logger == nil {
 		Logger = &Log{
 			App: log.New(os.Stdout, "[app] ", log.LstdFlags),

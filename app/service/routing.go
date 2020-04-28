@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
-	"sync"
 	"time"
 )
 
@@ -13,17 +12,16 @@ type Routing struct {
 }
 
 var Router *Routing
-var once sync.Once
 
 func GetRouting() *Routing {
+	lock.Lock()
+	defer lock.Unlock()
 	if Router == nil {
-		once.Do(func() {
-			Router = &Routing{router: mux.NewRouter()}
-			Router.router.PathPrefix("/static/").
-				Handler(http.StripPrefix(
-					"/static/",
-					http.FileServer(http.Dir("/static/")))).Name("static")
-		})
+		Router = &Routing{router: mux.NewRouter()}
+		Router.router.PathPrefix("/static/").
+			Handler(http.StripPrefix(
+				"/static/",
+				http.FileServer(http.Dir("/static/")))).Name("static")
 	}
 
 	return Router
