@@ -49,14 +49,15 @@ func main() {
 
 
     var command string
-    service.Logger.App.Println("Type \"exit\" for closing application")
+    service.Logger.App.Println(`Type "exit" for closing application`)
 
     for command != "exit" {
-        fmt.Print("> ")
         _, _ = fmt.Scanln(&command)
         switch command {
-        case "exit":
-            service.Logger.App.Println("Bye Bye...")
+            case "exit":
+                service.Logger.App.Println("Bye Bye...")
+        default:
+            service.Logger.App.Printf(`Command "%s" is unknouwn.`, command)
         }
     }
 }
