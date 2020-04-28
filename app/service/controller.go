@@ -3,12 +3,14 @@ package service
 import (
     "bytes"
     "fmt"
+    "reflect"
+    "strings"
     "text/template"
 )
 
 type Controller interface {
     Action(c *Context) string
-    Name() (string, string)
+    ConfigName() string
 }
 
 type BaseController struct {
@@ -37,4 +39,8 @@ func (bc *BaseController) Render(vars map[interface{}]interface{}, filenames ...
 
 func (bc *BaseController) RenderString(value interface{}) string {
     return fmt.Sprintf("%v", value)
+}
+
+func (bc *BaseController) ConfigName() string {
+    return strings.Replace(reflect.TypeOf(bc).String(), "*", "", -1)
 }

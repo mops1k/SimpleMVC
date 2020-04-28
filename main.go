@@ -17,12 +17,19 @@ var routing *service.Routing
 
 func init() {
     service.InitContainer()
-    service.Container.GetLogger().App.Println("Initializing server")
+    service.Container.GetLogger().App.Println("Initializing application")
     routing = service.Container.GetRouting()
 }
 
 func main() {
+    if service.Container.GetConfig().GetBool("database.enabled") {
+        db := service.Container.GetDatabase()
+        db.Connect()
+        defer db.Close()
+    }
+    // @TODO: move to controller collection handler
     routing.AddController(&controller.IndexController{})
+
     http.Handle("/", routing.RouteHandler())
 
     address := fmt.Sprintf("%v:%v", service.Container.GetConfig().Get("server.host"), service.Container.GetConfig().Get("server.port"))

@@ -12,7 +12,6 @@ type Routing struct {
     router *mux.Router
 }
 
-
 func initRouter() *Routing {
     router := &Routing{router: mux.NewRouter()}
     router.router.PathPrefix("/static/").
@@ -25,7 +24,7 @@ func initRouter() *Routing {
 
 func (r *Routing) AddController(c Controller, methods ...string) {
     methods = r.setDefaultMethods(methods)
-    pathName, path := c.Name()
+    pathName, path := Container.GetConfig().GetString(c.ConfigName()+".name"), Container.GetConfig().GetString(c.ConfigName()+".path")
     r.router.HandleFunc(path, func(writer http.ResponseWriter, request *http.Request) {
         start := time.Now()
         var context = &Context{response: writer, request: request, statusCode: http.StatusOK}

@@ -28,6 +28,7 @@ func (d *Database) Connect() {
     if err != nil {
         Container.GetLogger().App.Panic(err)
     }
+    d.orm.Debug().Set("gorm:auto_preload", true)
 }
 
 func (d *Database) Close() {
@@ -35,4 +36,8 @@ func (d *Database) Close() {
     if err != nil {
         Container.GetLogger().App.Panic(err)
     }
+}
+
+func (d *Database) GetORM() *gorm.DB {
+    return d.orm
 }

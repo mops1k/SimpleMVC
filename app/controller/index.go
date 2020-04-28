@@ -11,7 +11,3 @@ type IndexController struct {
 func (ic *IndexController) Action(c *service.Context) string {
     return ic.RenderString("Welcome to SimpleMVC!")
 }
-
-func (ic *IndexController) Name() (string, string) {
-    return "index", "/"
-}

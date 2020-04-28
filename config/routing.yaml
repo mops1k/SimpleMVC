@@ -1,0 +1,3 @@
+service.BaseController:
+    path: /
+    name: index
