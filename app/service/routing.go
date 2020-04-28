@@ -14,10 +14,11 @@ type Routing struct {
 
 func initRouter() *Routing {
     router := &Routing{router: mux.NewRouter()}
-    router.router.PathPrefix("/static/").
+    staticDirName := "static"
+    router.router.PathPrefix("/" + staticDirName).
         Handler(http.StripPrefix(
-            "/static/",
-            http.FileServer(http.Dir("/static/")))).Name("static")
+            "/" + staticDirName + "/",
+            http.FileServer(http.Dir("/" + staticDirName + "/")))).Name(staticDirName)
 
     return router
 }
