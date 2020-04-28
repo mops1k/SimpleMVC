@@ -21,7 +21,7 @@ func InitConfig() *Config {
         Configuration.reader.AutomaticEnv()
         Configuration.reader.SetConfigType("yaml")
 
-        dirName := "./app/config/"
+        dirName := "./config/"
 
         files, err := ioutil.ReadDir(dirName)
         if err != nil {
