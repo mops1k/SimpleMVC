@@ -1,11 +1,13 @@
 package main
 
 import (
-    "SimpleMVC/app/controller"
-    "SimpleMVC/app/service"
     "fmt"
+    "net"
     "net/http"
     "time"
+
+    "SimpleMVC/app/controller"
+    "SimpleMVC/app/service"
 )
 
 var routing *service.Routing
@@ -31,5 +33,30 @@ func main() {
         ErrorLog:     service.Logger.App,
     }
     service.Logger.App.Println(fmt.Sprintf("Server started at http://%s", address))
-    service.Logger.App.Panic(server.ListenAndServe())
+
+    listener, err := net.Listen("tcp", address)
+    if err != nil {
+        service.Logger.App.Fatal(err)
+    }
+
+    go func() {
+        err := server.Serve(listener)
+        if err != nil {
+            service.Logger.App.Fatal(err)
+        }
+    }()
+    defer server.Close()
+
+
+    var command string
+    service.Logger.App.Println("Type \"exit\" for closing application")
+
+    for command != "exit" {
+        fmt.Print("> ")
+        _, _ = fmt.Scanln(&command)
+        switch command {
+        case "exit":
+            service.Logger.App.Println("Bye Bye...")
+        }
+    }
 }
