@@ -1,27 +1,25 @@
 package service
 
 import (
-	"log"
-	"os"
-	"sync"
+    "log"
+    "os"
 )
 
 type Log struct {
-	App *log.Logger
+    App *log.Logger
 }
 
 var Logger *Log
-var lock = &sync.Mutex{}
 
 func InitLogger() *Log {
-	lock.Lock()
-	defer lock.Unlock()
+    Lock.Lock()
+    defer Lock.Unlock()
 
-	if Logger == nil {
-		Logger = &Log{
-			App: log.New(os.Stdout, "[app] ", log.LstdFlags),
-		}
-	}
+    if Logger == nil {
+        Logger = &Log{
+            App: log.New(os.Stdout, "[app] ", log.LstdFlags),
+        }
+    }
 
-	return Logger
+    return Logger
 }

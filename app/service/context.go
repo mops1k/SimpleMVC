@@ -3,28 +3,28 @@ package service
 import "net/http"
 
 type Context struct {
-	response   http.ResponseWriter
-	request    *http.Request
-	statusCode int
-	headers    map[string]string
+    response   http.ResponseWriter
+    request    *http.Request
+    statusCode int
+    headers    map[string]string
 }
 
 func (c *Context) Response() http.ResponseWriter {
-	return c.response
+    return c.response
 }
 
 func (c *Context) Request() *http.Request {
-	return c.request
+    return c.request
 }
 
 func (c *Context) StatusCode(code int) {
-	c.statusCode = code
+    c.statusCode = code
 }
 
 func (c *Context) Header(name string, value string) {
-	c.headers[name] = value
+    c.headers[name] = value
 }
 
 func (c *Context) Headers() map[string]string {
-	return c.headers
+    return c.headers
 }
