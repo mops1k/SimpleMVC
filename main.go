@@ -10,6 +10,7 @@ import (
     "SimpleMVC/app/service"
 
     "github.com/gorilla/mux"
+    "github.com/thoas/go-funk"
 )
 
 var routing *service.Routing
@@ -52,10 +53,10 @@ func main() {
     var command string
     service.Logger.App.Println(`Type "exit" for closing application`)
 
-    for command != "exit" {
+    for funk.Contains([]string{"exit", "quit", "q"}, command) == false {
         _, _ = fmt.Scanln(&command)
         switch command {
-            case "exit":
+            case "exit", "quit", "q":
                 service.Logger.App.Println("Bye Bye...")
             case "routing":
                 service.Logger.App.Println("Project routes:")
