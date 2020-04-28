@@ -5,7 +5,10 @@ import (
     "net/http"
     "time"
 
+    "github.com/gookit/event"
     "github.com/gorilla/mux"
+
+    httpEvent "SimpleMVC/app/service/event/http"
 )
 
 type Routing struct {
@@ -27,9 +30,15 @@ func (r *Routing) AddController(c Controller, methods ...string) {
     methods = r.setDefaultMethods(methods)
     pathName, path := Container.GetConfig().GetString(c.ConfigName()+".name"), Container.GetConfig().GetString(c.ConfigName()+".path")
     r.router.HandleFunc(path, func(writer http.ResponseWriter, request *http.Request) {
+        onRequestEvent := httpEvent.NewOnRequestEvent(request)
+        event.AddEvent(onRequestEvent)
+
+        _ = event.FireEvent(onRequestEvent)
         start := time.Now()
         var context = &Context{response: writer, request: request, statusCode: http.StatusOK}
         content := c.Action(context)
+        onResponseEvent := httpEvent.NewOnResponseEvent(request.Response, content)
+        event.AddEvent(onResponseEvent)
 
         if context.headers != nil {
             for name, value := range context.headers {
@@ -38,6 +47,7 @@ func (r *Routing) AddController(c Controller, methods ...string) {
         }
         writer.WriteHeader(context.statusCode)
 
+        _ = event.FireEvent(onResponseEvent)
         _, err := fmt.Fprint(writer, content)
         if err != nil {
             Container.GetLogger().App.Fatal(err)
