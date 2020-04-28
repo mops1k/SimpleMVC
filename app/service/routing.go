@@ -2,9 +2,10 @@ package service
 
 import (
     "fmt"
-    "github.com/gorilla/mux"
     "net/http"
     "time"
+
+    "github.com/gorilla/mux"
 )
 
 type Routing struct {

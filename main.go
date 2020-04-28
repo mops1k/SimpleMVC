@@ -8,6 +8,8 @@ import (
 
     "SimpleMVC/app/controller"
     "SimpleMVC/app/service"
+
+    "github.com/gorilla/mux"
 )
 
 var routing *service.Routing
@@ -56,6 +58,17 @@ func main() {
         switch command {
             case "exit":
                 service.Logger.App.Println("Bye Bye...")
+            case "routing":
+                service.Logger.App.Println("Project routes:")
+                _ = routing.RouteHandler().Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+                    path, err := route.GetPathTemplate()
+                    if err != nil {
+                        return err
+                    }
+                    fmt.Println(fmt.Sprintf("Name: %s, URI_TEMPLATE: %s", route.GetName(), path))
+
+                    return nil
+                })
         default:
             service.Logger.App.Printf(`Command "%s" is unknouwn.`, command)
         }
