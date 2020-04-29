@@ -1,3 +1,6 @@
 service.BaseController:
     path: /
     name: index
+    methods:
+        - GET
+        - POST

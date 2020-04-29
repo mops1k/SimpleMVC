@@ -26,7 +26,7 @@ func initRouter() *Routing {
     return router
 }
 
-func (r *Routing) AddController(c Controller, methods ...string) {
+func (r *Routing) addController(c Controller, methods ...string) {
     methods = r.setDefaultMethods(methods)
     pathName, path := Container.GetConfig().GetString(c.ConfigName()+".name"), Container.GetConfig().GetString(c.ConfigName()+".path")
     r.router.HandleFunc(path, func(writer http.ResponseWriter, request *http.Request) {
@@ -79,4 +79,10 @@ func (r *Routing) logRequest(start time.Time, req *http.Request) {
         time.Since(start),
         req.UserAgent(),
     )
+}
+
+func (r *Routing) HandleControllers() {
+    for _, controller := range Container.GetControllerCollection().GetAll() {
+        r.addController(controller, Container.GetConfig().GetStringSlice(controller.ConfigName()+".methods")...)
+    }
 }

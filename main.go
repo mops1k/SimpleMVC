@@ -27,8 +27,11 @@ func main() {
         db.Connect()
         defer db.Close()
     }
-    // @TODO: move to controller collection handler
-    routing.AddController(&controller.IndexController{})
+
+    service.Container.GetControllerCollection().
+        Add(&controller.IndexController{})
+
+    routing.HandleControllers()
 
     http.Handle("/", routing.RouteHandler())
 
@@ -68,10 +71,11 @@ func main() {
                 service.Container.GetLogger().App.Println("Project routes:")
                 _ = routing.RouteHandler().Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
                     path, err := route.GetPathTemplate()
+                    methods, _ := route.GetMethods()
                     if err != nil {
                         return err
                     }
-                    fmt.Println(fmt.Sprintf("Name: %s, URI_TEMPLATE: %s", route.GetName(), path))
+                    fmt.Println(fmt.Sprintf("Name: %s, URI_TEMPLATE: %s METHODS: %s", route.GetName(), path, methods))
 
                     return nil
                 })

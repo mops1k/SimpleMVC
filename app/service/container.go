@@ -7,6 +7,7 @@ type container struct {
     config *Config
     logger *Log
     routing *Routing
+    controllerCollection *ControllerCollection
     lock *sync.Mutex
 }
 
@@ -60,4 +61,14 @@ func (c *container) GetRouting() *Routing {
     }
 
     return c.routing
+}
+
+func (c *container) GetControllerCollection() *ControllerCollection {
+    if c.controllerCollection == nil {
+        c.lock.Lock()
+        defer c.lock.Unlock()
+        c.controllerCollection = &ControllerCollection{}
+    }
+
+    return c.controllerCollection
 }

@@ -56,6 +56,10 @@ func (c *Config) GetBool(key string) bool {
     return c.reader.GetBool(key)
 }
 
+func (c *Config) GetStringSlice(key string) []string {
+    return c.reader.GetStringSlice(key)
+}
+
 func (c *Config) GetDuration(key string) time.Duration {
     return c.reader.GetDuration(key)
 }
