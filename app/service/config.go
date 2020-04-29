@@ -2,7 +2,6 @@ package service
 
 import (
     "io/ioutil"
-    "os"
     "time"
 
     "github.com/spf13/viper"
@@ -15,7 +14,6 @@ type Config struct {
 var configuration *Config
 
 func initConfig() *Config {
-        var files []os.FileInfo
         configuration = &Config{reader: viper.New()}
         configuration.reader.AutomaticEnv()
         configuration.reader.SetConfigType("yaml")
