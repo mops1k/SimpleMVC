@@ -6,11 +6,11 @@ import (
     "net/http"
     "time"
 
-    "SimpleMVC/app/controller"
-    "SimpleMVC/app/service"
-
     "github.com/arthurkushman/pgo"
     "github.com/gorilla/mux"
+
+    "SimpleMVC/app/service"
+    "SimpleMVC/config"
 )
 
 var routing *service.Routing
@@ -28,11 +28,8 @@ func main() {
         defer db.Close()
     }
 
-    service.Container.GetControllerCollection().
-        Add(&controller.IndexController{})
-
+    config.InitControllers()
     routing.HandleControllers()
-
     http.Handle("/", routing.RouteHandler())
 
     address := fmt.Sprintf("%v:%v", service.Container.GetConfig().Get("server.host"), service.Container.GetConfig().Get("server.port"))

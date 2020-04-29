@@ -1,6 +1,5 @@
-service.BaseController:
+index:
     path: /
-    name: index
     methods:
         - GET
         - POST

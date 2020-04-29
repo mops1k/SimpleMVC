@@ -2,8 +2,10 @@ package service
 
 import (
     "io/ioutil"
+    "path/filepath"
     "time"
 
+    "github.com/arthurkushman/pgo"
     "github.com/spf13/viper"
 )
 
@@ -29,6 +31,11 @@ func initConfig() *Config {
             if file.IsDir() {
                 continue
             }
+
+            if pgo.InArray(filepath.Ext(file.Name()), []string{".yaml", ".yml"}) == false {
+                continue
+            }
+
             configuration.reader.SetConfigFile(dirName + file.Name())
             err = configuration.reader.MergeInConfig()
             if err != nil {

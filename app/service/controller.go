@@ -3,8 +3,6 @@ package service
 import (
     "bytes"
     "fmt"
-    "reflect"
-    "strings"
     "text/template"
 
     "github.com/arthurkushman/pgo"
@@ -12,7 +10,7 @@ import (
 
 type Controller interface {
     Action(c *Context) string
-    ConfigName() string
+    Name() string
 }
 
 type BaseController struct {
@@ -45,10 +43,6 @@ func (bc *BaseController) Render(vars map[interface{}]interface{}, filenames ...
 
 func (bc *BaseController) RenderString(value interface{}) string {
     return fmt.Sprintf("%v", value)
-}
-
-func (bc *BaseController) ConfigName() string {
-    return strings.Replace(reflect.TypeOf(bc).String(), "*", "", -1)
 }
 
 func (cc *ControllerCollection) Add(c Controller) *ControllerCollection {
