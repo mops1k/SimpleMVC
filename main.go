@@ -9,8 +9,8 @@ import (
     "SimpleMVC/app/controller"
     "SimpleMVC/app/service"
 
+    "github.com/arthurkushman/pgo"
     "github.com/gorilla/mux"
-    "github.com/thoas/go-funk"
 )
 
 var routing *service.Routing
@@ -59,7 +59,7 @@ func main() {
     var command string
     service.Container.GetLogger().App.Println(`Enter "exit", "quit" or "q" for closing application.`)
 
-    for funk.Contains([]string{"exit", "quit", "q"}, command) == false {
+    for pgo.InArray(command, []string{"exit", "quit", "q"}) == false {
         _, _ = fmt.Scanln(&command)
         switch command {
             case "exit", "quit", "q":
