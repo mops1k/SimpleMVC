@@ -38,7 +38,7 @@ func (bc *BaseController) Render(vars map[interface{}]interface{}, filenames ...
         Container.GetLogger().App.Panic(err)
     }
 
-    return string(writer.Bytes())
+    return writer.String()
 }
 
 func (bc *BaseController) RenderString(value interface{}) string {
@@ -46,7 +46,7 @@ func (bc *BaseController) RenderString(value interface{}) string {
 }
 
 func (cc *ControllerCollection) Add(c Controller) *ControllerCollection {
-    if pgo.InArray(c, cc.controllers) == false {
+    if !pgo.InArray(c, cc.controllers) {
         cc.controllers = append(cc.controllers, c)
     }
 

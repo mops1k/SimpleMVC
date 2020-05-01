@@ -59,7 +59,7 @@ func main() {
     var command string
     service.Container.GetLogger().App.Println(`Enter "exit", "quit" or "q" for closing application.`)
 
-    for pgo.InArray(command, []string{"exit", "quit", "q"}) == false {
+    for !pgo.InArray(command, []string{"exit", "quit", "q"}) {
         _, _ = fmt.Scanln(&command)
         switch command {
             case "exit", "quit", "q":

@@ -32,7 +32,7 @@ func initConfig() *Config {
                 continue
             }
 
-            if pgo.InArray(filepath.Ext(file.Name()), []string{".yaml", ".yml"}) == false {
+            if !pgo.InArray(filepath.Ext(file.Name()), []string{".yaml", ".yml"}) {
                 continue
             }
 
