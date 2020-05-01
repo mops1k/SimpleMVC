@@ -1,3 +1,6 @@
 /build
 .idea
 /vendor
+/var
+/var/*
+!/var/.gitkeep

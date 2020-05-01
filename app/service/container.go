@@ -28,6 +28,7 @@ func (c *container) GetDatabase() *Database {
         c.database = &Database{}
         c.database.SetDialect(c.GetConfig().GetString("database.type"))
         c.database.SetUrl(c.GetConfig().GetString("database.url"))
+        c.database.SetLogger(c.GetLogger().Database)
     }
 
     return c.database

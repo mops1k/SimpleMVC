@@ -3,6 +3,7 @@ package service
 import (
     "bytes"
     "fmt"
+    "os"
     "text/template"
 
     "github.com/arthurkushman/pgo"
@@ -28,14 +29,16 @@ func (bc *BaseController) Render(vars map[interface{}]interface{}, filenames ...
     }
     goTemplate, err := template.ParseFiles(paths...)
     if err != nil {
-        Container.GetLogger().App.Panic(err)
+        Container.GetLogger().App.Critical(err.Error())
+        os.Exit(2)
     }
 
     writer := &bytes.Buffer{}
 
     err = goTemplate.Execute(writer, vars)
     if err != nil {
-        Container.GetLogger().App.Panic(err)
+        Container.GetLogger().App.Critical(err.Error())
+        os.Exit(2)
     }
 
     return writer.String()

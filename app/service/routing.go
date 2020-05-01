@@ -50,7 +50,7 @@ func (r *Routing) addController(c Controller, methods ...string) {
         _ = event.FireEvent(onResponseEvent)
         _, err := fmt.Fprint(writer, content)
         if err != nil {
-            Container.GetLogger().App.Fatal(err)
+            Container.GetLogger().Http.Fatal(err)
         }
 
         r.logRequest(start, request)
@@ -72,7 +72,7 @@ func (r *Routing) setDefaultMethods(methods []string) []string {
 func (r *Routing) logRequest(start time.Time, req *http.Request) {
     requesterIP := req.RemoteAddr
 
-    Container.GetLogger().App.Println(
+    Container.GetLogger().Http.Println(
         req.RequestURI,
         req.Method,
         requesterIP,

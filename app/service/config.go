@@ -2,6 +2,7 @@ package service
 
 import (
     "io/ioutil"
+    "os"
     "path/filepath"
     "time"
 
@@ -24,7 +25,8 @@ func initConfig() *Config {
 
         files, err := ioutil.ReadDir(dirName)
         if err != nil {
-            Container.GetLogger().App.Panic(err)
+            Container.GetLogger().App.Critical(err.Error())
+            os.Exit(2)
         }
 
         for _, file := range files {
@@ -39,7 +41,8 @@ func initConfig() *Config {
             configuration.reader.SetConfigFile(dirName + file.Name())
             err = configuration.reader.MergeInConfig()
             if err != nil {
-                Container.GetLogger().App.Fatal(err)
+                Container.GetLogger().App.Critical(err.Error())
+                os.Exit(2)
             }
         }
 
@@ -76,11 +79,13 @@ func (c *Config) AddFile(path string) {
     c.reader.SetConfigFile(path)
     err := c.reader.MergeInConfig()
     if err != nil {
-        Container.GetLogger().App.Fatal(err)
+        Container.GetLogger().App.Critical(err.Error())
+        os.Exit(2)
     }
 
     err = c.reader.MergeInConfig()
     if err != nil {
-        Container.GetLogger().App.Fatal(err)
+        Container.GetLogger().App.Critical(err.Error())
+        os.Exit(2)
     }
 }

@@ -4,6 +4,7 @@ import (
     "fmt"
     "net"
     "net/http"
+    "os"
     "time"
 
     "github.com/arthurkushman/pgo"
@@ -17,7 +18,7 @@ var routing *service.Routing
 
 func init() {
     service.InitContainer()
-    service.Container.GetLogger().App.Println("Initializing application")
+    service.Container.GetLogger().App.Info("Initializing application")
     routing = service.Container.GetRouting()
 }
 
@@ -39,33 +40,35 @@ func main() {
         ReadTimeout:  service.Container.GetConfig().GetDuration("server.timeout.read") * time.Second,
         WriteTimeout: service.Container.GetConfig().GetDuration("server.timeout.write") * time.Second,
         IdleTimeout:  service.Container.GetConfig().GetDuration("server.timeout.idle") * time.Second,
-        ErrorLog:     service.Container.GetLogger().App,
+        ErrorLog:     service.Container.GetLogger().Http,
     }
-    service.Container.GetLogger().App.Println(fmt.Sprintf("Server started at http://%s", address))
+    service.Container.GetLogger().App.Info(fmt.Sprintf("Server started at http://%s", address))
 
     listener, err := net.Listen("tcp", address)
     if err != nil {
-        service.Container.GetLogger().App.Fatal(err)
+        service.Container.GetLogger().App.Critical(err.Error())
+        os.Exit(2)
     }
 
     go func() {
         err := server.Serve(listener)
         if err != nil {
-            service.Container.GetLogger().App.Fatal(err)
+            service.Container.GetLogger().App.Critical(err.Error())
+            os.Exit(2)
         }
     }()
     defer func() {_ = server.Close()}()
 
     var command string
-    service.Container.GetLogger().App.Println(`Enter "exit", "quit" or "q" for closing application.`)
+    service.Container.GetLogger().App.Info(`Enter "exit", "quit" or "q" for closing application.`)
 
     for !pgo.InArray(command, []string{"exit", "quit", "q"}) {
         _, _ = fmt.Scanln(&command)
         switch command {
             case "exit", "quit", "q":
-                service.Container.GetLogger().App.Println("Bye Bye...")
+                service.Container.GetLogger().App.Info("Bye Bye...")
             case "routing":
-                service.Container.GetLogger().App.Println("Project routes:")
+                service.Container.GetLogger().App.Info("Project routes:")
                 _ = routing.RouteHandler().Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
                     path, err := route.GetPathTemplate()
                     methods, _ := route.GetMethods()
@@ -77,7 +80,7 @@ func main() {
                     return nil
                 })
         default:
-            service.Container.GetLogger().App.Printf(`Command "%s" is unknouwn.`, command)
+            service.Container.GetLogger().App.Warning(`Command "%s" is unknouwn.`, command)
         }
     }
 }
