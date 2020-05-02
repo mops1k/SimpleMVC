@@ -47,14 +47,14 @@ func main() {
     listener, err := net.Listen("tcp", address)
     if err != nil {
         _ = service.Container.GetLogger().App.Critical(err.Error())
-        os.Exit(2)
+        os.Exit(1)
     }
 
     go func() {
         err := server.Serve(listener)
         if err != nil {
             _ = service.Container.GetLogger().App.Critical(err.Error())
-            os.Exit(2)
+            os.Exit(1)
         }
     }()
     defer func() {_ = server.Close()}()

@@ -42,7 +42,7 @@ func initConfig() *Config {
             err = configuration.reader.MergeInConfig()
             if err != nil {
                 _ = Container.GetLogger().App.Critical(err.Error())
-                os.Exit(2)
+                os.Exit(1)
             }
         }
 
@@ -80,12 +80,12 @@ func (c *Config) AddFile(path string) {
     err := c.reader.MergeInConfig()
     if err != nil {
         _ = Container.GetLogger().App.Critical(err.Error())
-        os.Exit(2)
+        os.Exit(1)
     }
 
     err = c.reader.MergeInConfig()
     if err != nil {
         _ = Container.GetLogger().App.Critical(err.Error())
-        os.Exit(2)
+        os.Exit(1)
     }
 }
