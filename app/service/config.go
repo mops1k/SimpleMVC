@@ -25,7 +25,7 @@ func initConfig() *Config {
 
         files, err := ioutil.ReadDir(dirName)
         if err != nil {
-            Container.GetLogger().App.Critical(err.Error())
+            _ = Container.GetLogger().App.Critical(err.Error())
             os.Exit(2)
         }
 
@@ -41,7 +41,7 @@ func initConfig() *Config {
             configuration.reader.SetConfigFile(dirName + file.Name())
             err = configuration.reader.MergeInConfig()
             if err != nil {
-                Container.GetLogger().App.Critical(err.Error())
+                _ = Container.GetLogger().App.Critical(err.Error())
                 os.Exit(2)
             }
         }
@@ -79,13 +79,13 @@ func (c *Config) AddFile(path string) {
     c.reader.SetConfigFile(path)
     err := c.reader.MergeInConfig()
     if err != nil {
-        Container.GetLogger().App.Critical(err.Error())
+        _ = Container.GetLogger().App.Critical(err.Error())
         os.Exit(2)
     }
 
     err = c.reader.MergeInConfig()
     if err != nil {
-        Container.GetLogger().App.Critical(err.Error())
+        _ = Container.GetLogger().App.Critical(err.Error())
         os.Exit(2)
     }
 }

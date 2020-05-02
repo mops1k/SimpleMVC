@@ -1,11 +1,6 @@
 package service
 
 import (
-    "bytes"
-    "fmt"
-    "os"
-    "text/template"
-
     "github.com/arthurkushman/pgo"
 )
 
@@ -22,30 +17,12 @@ type ControllerCollection struct {
     controllers []Controller
 }
 
-func (bc *BaseController) Render(vars map[interface{}]interface{}, filenames ...string) string {
-    var paths []string
-    for _, filename := range filenames {
-        paths = append(paths, "templates/"+filename)
-    }
-    goTemplate, err := template.ParseFiles(paths...)
-    if err != nil {
-        Container.GetLogger().App.Critical(err.Error())
-        os.Exit(2)
-    }
-
-    writer := &bytes.Buffer{}
-
-    err = goTemplate.Execute(writer, vars)
-    if err != nil {
-        Container.GetLogger().App.Critical(err.Error())
-        os.Exit(2)
-    }
-
-    return writer.String()
+func (bc *BaseController) Render(filename string, vars map[string]interface{}) string {
+    return Container.GetTemplate().RenderTemplate(filename, vars)
 }
 
-func (bc *BaseController) RenderString(value interface{}) string {
-    return fmt.Sprintf("%v", value)
+func (bc *BaseController) RenderString(content string, vars map[string]interface{}) string {
+    return Container.GetTemplate().RenderString(content, vars)
 }
 
 func (cc *ControllerCollection) Add(c Controller) *ControllerCollection {

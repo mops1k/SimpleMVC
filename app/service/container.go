@@ -1,6 +1,10 @@
 package service
 
-import "sync"
+import (
+    "sync"
+
+    "github.com/CloudyKit/jet"
+)
 
 type container struct {
     database *Database
@@ -8,6 +12,7 @@ type container struct {
     logger *Log
     routing *Routing
     controllerCollection *ControllerCollection
+    template *template
     lock *sync.Mutex
 }
 
@@ -72,4 +77,14 @@ func (c *container) GetControllerCollection() *ControllerCollection {
     }
 
     return c.controllerCollection
+}
+
+func (c *container) GetTemplate() *template {
+    if c.template == nil {
+        c.lock.Lock()
+        defer c.lock.Unlock()
+        c.template = &template{view: jet.NewHTMLSet("./templates/")}
+    }
+
+    return c.template
 }
