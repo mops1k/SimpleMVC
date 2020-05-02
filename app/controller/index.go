@@ -10,7 +10,7 @@ type IndexController struct {
 
 func (ic *IndexController) Action(c *service.Context) string {
     // return ic.RenderString(`Welcome to {{ Name }}!`, map[string]interface{}{"Name": "SimpleMVC"})
-    return ic.Render("index.jet", map[string]interface{}{"Name": "SimpleMVC"})
+    return ic.Render("layout/index.jet", map[string]interface{}{"Name": "SimpleMVC"})
 }
 
 func (ic *IndexController) Name() string {

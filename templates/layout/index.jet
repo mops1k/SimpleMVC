@@ -1,0 +1,5 @@
+{{ extends "base.jet" }}
+
+{{ block body() }}
+Welcome to {{ Name }}!
+{{ end }}

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ block title() }}SimpleMVC{{ end }}</title>
+
+    {{ block stylesheets() }}
+    {{ end }}
+</head>
+
+<body>
+{{ block body() }}
+{{ end }}
+
+{{ block javascripts() }}
+{{ end }}
+</body>
+</html>
