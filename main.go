@@ -7,14 +7,15 @@ import (
     "os"
     "time"
 
-    "github.com/arthurkushman/pgo"
-    "github.com/gorilla/mux"
+    "github.com/c-bata/go-prompt"
 
+    "SimpleMVC/app/command"
     "SimpleMVC/app/service"
     "SimpleMVC/config"
 )
 
 var routing *service.Routing
+var cc = &service.CommandCollection{}
 
 func init() {
     service.InitContainer()
@@ -59,28 +60,23 @@ func main() {
     }()
     defer func() { _ = server.Close() }()
 
-    var command string
-    _ = service.Container.GetLogger().App.Info(`Enter "exit", "quit" or "q" for closing application.`)
+    _ = service.Container.GetLogger().App.Info(`Enter "exit" for closing application.`)
 
-    for !pgo.InArray(command, []string{"exit", "quit", "q"}) {
-        _, _ = fmt.Scanln(&command)
-        switch command {
-        case "exit", "quit", "q":
-            _ = service.Container.GetLogger().App.Info("Bye Bye...")
-        case "routing":
-            _ = service.Container.GetLogger().App.Info("Project routes:")
-            _ = routing.RouteHandler().Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
-                path, err := route.GetPathTemplate()
-                methods, _ := route.GetMethods()
-                if err != nil {
-                    return err
-                }
-                fmt.Println(fmt.Sprintf("Name: %s, URI_TEMPLATE: %s METHODS: %s", route.GetName(), path, methods))
+    cc.Add(&command.ExitCommand{})
+    p := prompt.New(executor, completer)
+    p.Run()
+}
 
-                return nil
-            })
-        default:
-            _ = service.Container.GetLogger().App.Warning(`Command "%s" is unknouwn.`, command)
-        }
+func executor(t string) {
+    c := cc.Get(t)
+    c.Action()
+}
+
+func completer(t prompt.Document) []prompt.Suggest {
+    var completer []prompt.Suggest
+    for _, c := range cc.GetAll() {
+        completer = append(completer, prompt.Suggest{Text: c.Name(), Description: c.Description()})
     }
+
+    return completer
 }
