@@ -57,7 +57,7 @@ func main() {
             os.Exit(1)
         }
     }()
-    defer func() {_ = server.Close()}()
+    defer func() { _ = server.Close() }()
 
     var command string
     _ = service.Container.GetLogger().App.Info(`Enter "exit", "quit" or "q" for closing application.`)
@@ -65,20 +65,20 @@ func main() {
     for !pgo.InArray(command, []string{"exit", "quit", "q"}) {
         _, _ = fmt.Scanln(&command)
         switch command {
-            case "exit", "quit", "q":
-                _ = service.Container.GetLogger().App.Info("Bye Bye...")
-            case "routing":
-                _ = service.Container.GetLogger().App.Info("Project routes:")
-                _ = routing.RouteHandler().Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
-                    path, err := route.GetPathTemplate()
-                    methods, _ := route.GetMethods()
-                    if err != nil {
-                        return err
-                    }
-                    fmt.Println(fmt.Sprintf("Name: %s, URI_TEMPLATE: %s METHODS: %s", route.GetName(), path, methods))
+        case "exit", "quit", "q":
+            _ = service.Container.GetLogger().App.Info("Bye Bye...")
+        case "routing":
+            _ = service.Container.GetLogger().App.Info("Project routes:")
+            _ = routing.RouteHandler().Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+                path, err := route.GetPathTemplate()
+                methods, _ := route.GetMethods()
+                if err != nil {
+                    return err
+                }
+                fmt.Println(fmt.Sprintf("Name: %s, URI_TEMPLATE: %s METHODS: %s", route.GetName(), path, methods))
 
-                    return nil
-                })
+                return nil
+            })
         default:
             _ = service.Container.GetLogger().App.Warning(`Command "%s" is unknouwn.`, command)
         }

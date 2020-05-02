@@ -17,34 +17,34 @@ type Config struct {
 var configuration *Config
 
 func initConfig() *Config {
-        configuration = &Config{reader: viper.New()}
-        configuration.reader.AutomaticEnv()
-        configuration.reader.SetConfigType("yaml")
+    configuration = &Config{reader: viper.New()}
+    configuration.reader.AutomaticEnv()
+    configuration.reader.SetConfigType("yaml")
 
-        dirName := "./config/"
+    dirName := "./config/"
 
-        files, err := ioutil.ReadDir(dirName)
+    files, err := ioutil.ReadDir(dirName)
+    if err != nil {
+        _ = Container.GetLogger().App.Critical(err.Error())
+        os.Exit(2)
+    }
+
+    for _, file := range files {
+        if file.IsDir() {
+            continue
+        }
+
+        if !pgo.InArray(filepath.Ext(file.Name()), []string{".yaml", ".yml"}) {
+            continue
+        }
+
+        configuration.reader.SetConfigFile(dirName + file.Name())
+        err = configuration.reader.MergeInConfig()
         if err != nil {
             _ = Container.GetLogger().App.Critical(err.Error())
-            os.Exit(2)
+            os.Exit(1)
         }
-
-        for _, file := range files {
-            if file.IsDir() {
-                continue
-            }
-
-            if !pgo.InArray(filepath.Ext(file.Name()), []string{".yaml", ".yml"}) {
-                continue
-            }
-
-            configuration.reader.SetConfigFile(dirName + file.Name())
-            err = configuration.reader.MergeInConfig()
-            if err != nil {
-                _ = Container.GetLogger().App.Critical(err.Error())
-                os.Exit(1)
-            }
-        }
+    }
 
     return configuration
 }
