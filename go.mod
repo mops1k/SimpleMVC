@@ -7,8 +7,10 @@ require (
 	github.com/CloudyKit/jet v2.1.2+incompatible
 	github.com/arthurkushman/pgo v0.0.0-20200406094630-0e7858f78767
 	github.com/c-bata/go-prompt v0.2.3
+	github.com/go-openapi/strfmt v0.19.5 // indirect
 	github.com/gookit/event v1.0.3
 	github.com/gorilla/mux v1.7.4
+	github.com/jedib0t/go-pretty v4.3.0+incompatible
 	github.com/jinzhu/gorm v1.9.12
 	github.com/lajosbencz/glo v0.1.0
 	github.com/mattn/go-colorable v0.1.6 // indirect

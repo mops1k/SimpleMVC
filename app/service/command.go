@@ -1,9 +1,11 @@
 package service
 
+import "SimpleMVC/app/service/command"
+
 type Command interface {
     Name() string
     Description() string
-    Action()
+    Action(ctx command.Context)
 }
 
 type CommandCollection struct {
@@ -26,4 +28,12 @@ func (cc *CommandCollection) Get(name string) Command {
 
 func (cc *CommandCollection) GetAll() map[string]Command {
     return cc.collection
+}
+
+func (cc *CommandCollection) Has(name string) bool {
+    if cc.collection[name] == nil {
+        return false
+    }
+
+    return true
 }

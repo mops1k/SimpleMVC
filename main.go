@@ -11,6 +11,7 @@ import (
 
     "SimpleMVC/app/command"
     "SimpleMVC/app/service"
+    cmd "SimpleMVC/app/service/command"
     "SimpleMVC/config"
 )
 
@@ -63,13 +64,20 @@ func main() {
     _ = service.Container.GetLogger().App.Info(`Enter "exit" for closing application.`)
 
     cc.Add(&command.ExitCommand{})
+    cc.Add(&command.RoutingCommand{})
     p := prompt.New(executor, completer)
     p.Run()
 }
 
 func executor(t string) {
-    c := cc.Get(t)
-    c.Action()
+    parser := cmd.NewParser()
+    parser.Parse(t)
+    if cc.Has(parser.Ctx().Command()) {
+        c := cc.Get(parser.Ctx().Command())
+        c.Action(parser.Ctx())
+    } else {
+        service.Container.GetLogger().App.Warning(`Unknown command "%s"`, parser.Ctx().Command())
+    }
 }
 
 func completer(t prompt.Document) []prompt.Suggest {

@@ -1,6 +1,10 @@
 package command
 
-import "os"
+import (
+    "os"
+
+    "SimpleMVC/app/service/command"
+)
 
 type ExitCommand struct {}
 
@@ -12,6 +16,6 @@ func (e *ExitCommand) Description() string {
     return "Exiting from application"
 }
 
-func (e *ExitCommand) Action() {
+func (e *ExitCommand) Action(ctx command.Context) {
     os.Exit(0)
 }
