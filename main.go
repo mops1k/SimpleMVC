@@ -7,8 +7,6 @@ import (
     "os"
     "time"
 
-    "github.com/c-bata/go-prompt"
-
     "SimpleMVC/app/command"
     "SimpleMVC/app/service"
     cmd "SimpleMVC/app/service/command"
@@ -65,8 +63,12 @@ func main() {
 
     cc.Add(&command.ExitCommand{})
     cc.Add(&command.RoutingCommand{})
-    p := prompt.New(executor, completer)
-    p.Run()
+    var c string
+    for {
+        fmt.Print("> ")
+        _, _ = fmt.Scanln(&c)
+        executor(c)
+    }
 }
 
 func executor(t string) {
@@ -76,15 +78,6 @@ func executor(t string) {
         c := cc.Get(parser.Ctx().Command())
         c.Action(parser.Ctx())
     } else {
-        service.Container.GetLogger().App.Warning(`Unknown command "%s"`, parser.Ctx().Command())
+        _ = service.Container.GetLogger().App.Warning(`Unknown command "%s"`, parser.Ctx().Command())
     }
-}
-
-func completer(t prompt.Document) []prompt.Suggest {
-    var completer []prompt.Suggest
-    for _, c := range cc.GetAll() {
-        completer = append(completer, prompt.Suggest{Text: c.Name(), Description: c.Description()})
-    }
-
-    return completer
 }

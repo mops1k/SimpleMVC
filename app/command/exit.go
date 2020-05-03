@@ -3,6 +3,7 @@ package command
 import (
     "os"
 
+    "SimpleMVC/app/service"
     "SimpleMVC/app/service/command"
 )
 
@@ -17,5 +18,6 @@ func (e *ExitCommand) Description() string {
 }
 
 func (e *ExitCommand) Action(ctx command.Context) {
+    _ = service.Container.GetLogger().App.Info("Bye Bye...")
     os.Exit(0)
 }
