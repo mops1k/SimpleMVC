@@ -33,11 +33,7 @@ func (cc *CommandCollection) GetAll() map[string]Command {
 }
 
 func (cc *CommandCollection) Has(name string) bool {
-    if cc.collection[name] == nil {
-        return false
-    }
-
-    return true
+    return cc.collection[name] == nil
 }
 
 func init() {

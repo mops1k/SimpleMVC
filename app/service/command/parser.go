@@ -55,5 +55,4 @@ func (p *Parser) Parse(str string) {
     matches = pattern.FindAllStringSubmatch(str, 1)
 
     p.ctx.argument.value = matches[0][1]
-    str = strings.Replace(str, matches[0][1], "", -1)
 }

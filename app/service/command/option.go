@@ -1,7 +1,6 @@
 package command
 
 import (
-    "errors"
     "fmt"
 )
 
@@ -21,7 +20,7 @@ func (o *Option) set(name string, value interface{}) *Option {
 
 func (o *Option) Get(name string) (interface{}, error) {
     if o.data[name] == nil {
-        return nil, errors.New(fmt.Sprintf(`Option name %s does not exists.`))
+        return nil, fmt.Errorf(`Option name %s does not exists.`, name)
     }
 
     return o.data[name], nil
