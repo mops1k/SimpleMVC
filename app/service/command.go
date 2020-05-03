@@ -12,6 +12,8 @@ type CommandCollection struct {
     collection map[string]Command
 }
 
+var Commands *CommandCollection
+
 func (cc *CommandCollection) Add(c Command) *CommandCollection {
     if cc.collection == nil {
         cc.collection = make(map[string]Command)
@@ -36,4 +38,8 @@ func (cc *CommandCollection) Has(name string) bool {
     }
 
     return true
+}
+
+func init() {
+    Commands = &CommandCollection{}
 }

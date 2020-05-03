@@ -14,7 +14,7 @@ import (
 )
 
 var routing *service.Routing
-var cc = &service.CommandCollection{}
+var cc = service.Commands
 
 func init() {
     service.InitContainer()
@@ -78,6 +78,6 @@ func executor(t string) {
         c := cc.Get(parser.Ctx().Command())
         c.Action(parser.Ctx())
     } else {
-        _ = service.Container.GetLogger().App.Warning(`Unknown command "%s"`, parser.Ctx().Command())
+        _ = service.Container.GetLogger().App.Warning(`Unknown command "%s".`, parser.Ctx().Command())
     }
 }
